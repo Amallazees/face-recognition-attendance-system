@@ -32,7 +32,7 @@ class MainWindow(ctk.CTk):
 
     def _build_ui(self):
         # Header Bar
-        header = ctk.CTkFrame(self, fg_color=COLOR_CARD, corner_radius=0, height=85)
+        header = ctk.CTkFrame(self, fg_color=COLOR_CARD, corner_radius=0, height=90)
         header.pack(fill="x", side="top")
 
         # Header Title
@@ -41,14 +41,12 @@ class MainWindow(ctk.CTk):
 
         ctk.CTkLabel(
             title_box, text="🎓 FACE RECOGNITION ATTENDANCE SYSTEM",
-            font=("Segoe UI", 22, "bold"), text_color=COLOR_TEXT
+            font=("Segoe UI Black", 24, "bold"), text_color="#FFFFFF"
         ).pack(anchor="w")
 
         ctk.CTkLabel(
             title_box, text="Smart AI Powered Attendance System",
             font=("Segoe UI", 12, "bold"), text_color=COLOR_SUBTEXT
-        ).pack(anchor="w")
-            font=("Segoe UI", 11), text_color=COLOR_SUBTEXT
         ).pack(anchor="w")
 
         # Header Right: Live Clock & Status
