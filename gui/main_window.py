@@ -22,7 +22,7 @@ class MainWindow(ctk.CTk):
         self.face_engine = face_engine
         self.sheets_manager = sheets_manager
 
-        self.title("Face Recognition Attendance System - Office & School Edition")
+        self.title("FACE RECOGNITION ATTENDANCE SYSTEM")
         self.geometry("1000x680")
         self.minsize(900, 600)
         self.configure(fg_color=COLOR_BG)
@@ -32,20 +32,22 @@ class MainWindow(ctk.CTk):
 
     def _build_ui(self):
         # Header Bar
-        header = ctk.CTkFrame(self, fg_color=COLOR_CARD, corner_radius=0, height=80)
+        header = ctk.CTkFrame(self, fg_color=COLOR_CARD, corner_radius=0, height=85)
         header.pack(fill="x", side="top")
 
         # Header Title
         title_box = ctk.CTkFrame(header, fg_color="transparent")
-        title_box.pack(side="left", padx=25, pady=15)
+        title_box.pack(side="left", padx=25, pady=12)
 
         ctk.CTkLabel(
-            title_box, text="🎓 FACE ATTENDANCE SYSTEM",
-            font=("Segoe UI", 20, "bold"), text_color=COLOR_TEXT
+            title_box, text="🎓 FACE RECOGNITION ATTENDANCE SYSTEM",
+            font=("Segoe UI", 22, "bold"), text_color=COLOR_TEXT
         ).pack(anchor="w")
 
         ctk.CTkLabel(
-            title_box, text="Smart AI Powered Attendance for Office & School Use",
+            title_box, text="Smart AI Powered Attendance System",
+            font=("Segoe UI", 12, "bold"), text_color=COLOR_SUBTEXT
+        ).pack(anchor="w")
             font=("Segoe UI", 11), text_color=COLOR_SUBTEXT
         ).pack(anchor="w")
 

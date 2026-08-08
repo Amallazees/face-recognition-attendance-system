@@ -1,4 +1,4 @@
-# 🎓 Face Recognition Attendance System (Office & School Use)
+# 🎓 **FACE RECOGNITION ATTENDANCE SYSTEM**
 
 A modern, desktop-based Face Recognition Attendance System built with **Python**, **CustomTkinter**, **OpenCV**, **ReportLab**, and **Google Sheets API**. Designed specifically for schools, colleges, and corporate offices to manage attendance seamlessly online and offline.
 
