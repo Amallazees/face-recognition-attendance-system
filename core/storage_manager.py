@@ -249,6 +249,84 @@ class StorageManager:
         records.reverse()
         return records
 
+    def delete_attendance_record(self, target_record: dict) -> tuple[bool, str]:
+        """Deletes a specific attendance record row from CSV."""
+        if not os.path.exists(ATTENDANCE_FILE):
+            return False, "Attendance record file not found."
+
+        all_rows = []
+        deleted = False
+
+        try:
+            with open(ATTENDANCE_FILE, "r", encoding="utf-8") as f:
+                reader = csv.reader(f)
+                header = next(reader, None)
+                if header:
+                    all_rows.append(header)
+                
+                for row in reader:
+                    if len(row) >= 7:
+                        if (row[0] == target_record.get("Date") and
+                            row[1] == target_record.get("Time") and
+                            row[2] == target_record.get("Admission No")):
+                            deleted = True
+                            continue
+                    all_rows.append(row)
+
+            if deleted:
+                with open(ATTENDANCE_FILE, "w", newline="", encoding="utf-8") as f:
+                    writer = csv.writer(f)
+                    writer.writerows(all_rows)
+                return True, "Attendance record deleted successfully."
+            else:
+                return False, "Record not found."
+        except Exception as e:
+            return False, f"Error deleting record: {str(e)}"
+
+    def update_attendance_record(self, original_record: dict, updated_record: dict) -> tuple[bool, str]:
+        """Updates a specific attendance record row in CSV."""
+        if not os.path.exists(ATTENDANCE_FILE):
+            return False, "Attendance record file not found."
+
+        all_rows = []
+        updated = False
+
+        try:
+            with open(ATTENDANCE_FILE, "r", encoding="utf-8") as f:
+                reader = csv.reader(f)
+                header = next(reader, None)
+                if header:
+                    all_rows.append(header)
+
+                for row in reader:
+                    if len(row) >= 7:
+                        if (row[0] == original_record.get("Date") and
+                            row[1] == original_record.get("Time") and
+                            row[2] == original_record.get("Admission No")):
+                            new_row = [
+                                updated_record.get("Date", row[0]),
+                                updated_record.get("Time", row[1]),
+                                updated_record.get("Admission No", row[2]),
+                                updated_record.get("Name", row[3]),
+                                updated_record.get("Roll No", row[4]),
+                                updated_record.get("Department", row[5]),
+                                updated_record.get("Status", row[6])
+                            ]
+                            all_rows.append(new_row)
+                            updated = True
+                            continue
+                    all_rows.append(row)
+
+            if updated:
+                with open(ATTENDANCE_FILE, "w", newline="", encoding="utf-8") as f:
+                    writer = csv.writer(f)
+                    writer.writerows(all_rows)
+                return True, "Attendance record updated successfully."
+            else:
+                return False, "Record not found."
+        except Exception as e:
+            return False, f"Error updating record: {str(e)}"
+
     def export_attendance_pdf(self, records: list[dict], output_path: str) -> tuple[bool, str]:
         """Generates a styled PDF report for attendance records."""
         try:

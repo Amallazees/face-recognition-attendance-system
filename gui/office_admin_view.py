@@ -489,9 +489,9 @@ class OfficeAdminWindow(ctk.CTkToplevel):
         header_row.pack(fill="x", padx=10, pady=(10, 5))
         header_row.pack_propagate(False)
 
-        cols = [("Date", 90), ("Time", 90), ("Adm No", 100), ("Name", 180), ("Roll No", 70), ("Department", 120), ("Status", 80)]
+        cols = [("Date", 85), ("Time", 85), ("Adm No", 95), ("Name", 150), ("Roll No", 60), ("Department", 100), ("Status", 65), ("Actions", 100)]
         for col_name, col_w in cols:
-            ctk.CTkLabel(header_row, text=col_name, font=("Segoe UI", 11, "bold"), text_color=COLOR_TEXT, width=col_w, anchor="w").pack(side="left", padx=5)
+            ctk.CTkLabel(header_row, text=col_name, font=("Segoe UI", 11, "bold"), text_color=COLOR_TEXT, width=col_w, anchor="w").pack(side="left", padx=4)
 
         # Scrollable Data List
         self.att_scroll_list = ctk.CTkScrollableFrame(table_card, fg_color="transparent")
@@ -518,17 +518,105 @@ class OfficeAdminWindow(ctk.CTkToplevel):
             return
 
         for r in records:
-            row_frame = ctk.CTkFrame(self.att_scroll_list, fg_color="transparent", height=36)
+            row_frame = ctk.CTkFrame(self.att_scroll_list, fg_color="transparent", height=38)
             row_frame.pack(fill="x", pady=2)
             row_frame.pack_propagate(False)
 
-            ctk.CTkLabel(row_frame, text=r.get("Date", ""), font=("Segoe UI", 11), text_color=COLOR_TEXT, width=90, anchor="w").pack(side="left", padx=5)
-            ctk.CTkLabel(row_frame, text=r.get("Time", ""), font=("Segoe UI", 11), text_color=COLOR_SUBTEXT, width=90, anchor="w").pack(side="left", padx=5)
-            ctk.CTkLabel(row_frame, text=r.get("Admission No", ""), font=("Segoe UI", 11, "bold"), text_color=COLOR_ACCENT, width=100, anchor="w").pack(side="left", padx=5)
-            ctk.CTkLabel(row_frame, text=r.get("Name", ""), font=("Segoe UI", 11, "bold"), text_color=COLOR_TEXT, width=180, anchor="w").pack(side="left", padx=5)
-            ctk.CTkLabel(row_frame, text=r.get("Roll No", ""), font=("Segoe UI", 11), text_color=COLOR_TEXT, width=70, anchor="w").pack(side="left", padx=5)
-            ctk.CTkLabel(row_frame, text=r.get("Department", ""), font=("Segoe UI", 11), text_color=COLOR_SUBTEXT, width=120, anchor="w").pack(side="left", padx=5)
-            ctk.CTkLabel(row_frame, text=r.get("Status", "Present"), font=("Segoe UI", 11, "bold"), text_color=COLOR_SUCCESS, width=80, anchor="w").pack(side="left", padx=5)
+            ctk.CTkLabel(row_frame, text=r.get("Date", ""), font=("Segoe UI", 11), text_color=COLOR_TEXT, width=85, anchor="w").pack(side="left", padx=4)
+            ctk.CTkLabel(row_frame, text=r.get("Time", ""), font=("Segoe UI", 10), text_color=COLOR_SUBTEXT, width=85, anchor="w").pack(side="left", padx=4)
+            ctk.CTkLabel(row_frame, text=r.get("Admission No", ""), font=("Segoe UI", 11, "bold"), text_color=COLOR_ACCENT, width=95, anchor="w").pack(side="left", padx=4)
+            ctk.CTkLabel(row_frame, text=r.get("Name", ""), font=("Segoe UI", 11, "bold"), text_color=COLOR_TEXT, width=150, anchor="w").pack(side="left", padx=4)
+            ctk.CTkLabel(row_frame, text=r.get("Roll No", ""), font=("Segoe UI", 11), text_color=COLOR_TEXT, width=60, anchor="w").pack(side="left", padx=4)
+            ctk.CTkLabel(row_frame, text=r.get("Department", ""), font=("Segoe UI", 11), text_color=COLOR_SUBTEXT, width=110, anchor="w").pack(side="left", padx=4)
+            ctk.CTkLabel(row_frame, text=r.get("Status", "Present"), font=("Segoe UI", 11, "bold"), text_color=COLOR_SUCCESS, width=65, anchor="w").pack(side="left", padx=4)
+
+            # Actions Frame (Edit & Delete Buttons)
+            actions_frame = ctk.CTkFrame(row_frame, fg_color="transparent", width=100)
+            actions_frame.pack(side="left", padx=4)
+
+            btn_edit = ctk.CTkButton(
+                actions_frame, text="✏️", width=34, height=28,
+                fg_color=COLOR_ACCENT, hover_color=COLOR_ACCENT_HOVER, font=("Segoe UI", 11),
+                command=lambda rec=r: self._open_edit_attendance_modal(rec)
+            )
+            btn_edit.pack(side="left", padx=2)
+
+            btn_del = ctk.CTkButton(
+                actions_frame, text="🗑️", width=34, height=28,
+                fg_color=COLOR_DANGER, hover_color="#DC2626", font=("Segoe UI", 11),
+                command=lambda rec=r: self._delete_attendance_record(rec)
+            )
+            btn_del.pack(side="left", padx=2)
+
+    def _open_edit_attendance_modal(self, record):
+        modal = ctk.CTkToplevel(self)
+        modal.title(f"Edit Attendance - {record.get('Name')}")
+        modal.geometry("420x520")
+        modal.configure(fg_color=COLOR_CARD)
+        modal.transient(self)
+        modal.grab_set()
+
+        container = ctk.CTkFrame(modal, fg_color="transparent")
+        container.pack(fill="both", expand=True, padx=25, pady=20)
+
+        ctk.CTkLabel(container, text="✏️ Edit Attendance Record", font=("Segoe UI", 16, "bold"), text_color=COLOR_TEXT).pack(anchor="w", pady=(0, 10))
+
+        ctk.CTkLabel(container, text="Full Name", font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        e_name = ctk.CTkEntry(container, height=34)
+        e_name.insert(0, record.get('Name', ''))
+        e_name.pack(fill="x", pady=(0, 8))
+
+        ctk.CTkLabel(container, text="Admission No", font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        e_adm = ctk.CTkEntry(container, height=34)
+        e_adm.insert(0, record.get('Admission No', ''))
+        e_adm.pack(fill="x", pady=(0, 8))
+
+        ctk.CTkLabel(container, text="Roll No", font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        e_roll = ctk.CTkEntry(container, height=34)
+        e_roll.insert(0, record.get('Roll No', ''))
+        e_roll.pack(fill="x", pady=(0, 8))
+
+        ctk.CTkLabel(container, text="Department", font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        e_dept = ctk.CTkEntry(container, height=34)
+        e_dept.insert(0, record.get('Department', ''))
+        e_dept.pack(fill="x", pady=(0, 8))
+
+        ctk.CTkLabel(container, text="Date (YYYY-MM-DD)", font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        e_date = ctk.CTkEntry(container, height=34)
+        e_date.insert(0, record.get('Date', ''))
+        e_date.pack(fill="x", pady=(0, 8))
+
+        ctk.CTkLabel(container, text="Status", font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        e_status = ctk.CTkEntry(container, height=34)
+        e_status.insert(0, record.get('Status', 'Present'))
+        e_status.pack(fill="x", pady=(0, 12))
+
+        lbl_status = ctk.CTkLabel(container, text="", font=("Segoe UI", 11), text_color=COLOR_DANGER)
+        lbl_status.pack(pady=(0, 8))
+
+        def _save():
+            updated = {
+                "Date": e_date.get().strip(),
+                "Time": record.get("Time"),
+                "Admission No": e_adm.get().strip(),
+                "Name": e_name.get().strip(),
+                "Roll No": e_roll.get().strip(),
+                "Department": e_dept.get().strip(),
+                "Status": e_status.get().strip()
+            }
+            success, msg = self.storage_manager.update_attendance_record(record, updated)
+            if success:
+                self._refresh_attendance_table()
+                modal.destroy()
+            else:
+                lbl_status.configure(text=f"❌ {msg}")
+
+        ctk.CTkButton(container, text="💾 Save Changes", fg_color=COLOR_SUCCESS, height=38, font=("Segoe UI", 12, "bold"), command=_save).pack(fill="x")
+
+    def _delete_attendance_record(self, record):
+        success, msg = self.storage_manager.delete_attendance_record(record)
+        if success:
+            self._refresh_attendance_table()
 
     def _export_pdf_report(self):
         from tkinter import filedialog, messagebox
