@@ -41,12 +41,12 @@ class MainWindow(ctk.CTk):
 
         ctk.CTkLabel(
             title_box, text="🎓 FACE RECOGNITION ATTENDANCE SYSTEM",
-            font=("Segoe UI Black", 24, "bold"), text_color="#FFFFFF"
+            font=("Arial Black", 26, "bold"), text_color="#FFFFFF"
         ).pack(anchor="w")
 
         ctk.CTkLabel(
             title_box, text="Smart AI Powered Attendance System",
-            font=("Segoe UI", 12, "bold"), text_color=COLOR_SUBTEXT
+            font=("Segoe UI Black", 12, "bold"), text_color=COLOR_SUBTEXT
         ).pack(anchor="w")
 
         # Header Right: Live Clock & Status
