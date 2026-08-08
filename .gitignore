@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local data & secret credentials
+credentials.json
+*.log
+*.tmp
+.idea/
+.vscode/
+.venv/
+env/
+venv/
